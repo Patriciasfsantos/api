@@ -1,40 +1,28 @@
-// criando o index.js
-//criação de uma aplicação express
-const express  = require('express');//importando express
+//Criando o index.js
+//Criação de uma aplicação Express
+const express = require('express'); // Importando Express
 
-const path = require('path');//importando path 
-// o path retorna o caminho de forma dinamica
+const path = require('path'); // Importando Path 
+//O Path retorna o caminho de forma dinamica
 
-const app=express();
-//o app ira receber o express e todas suas dependencias
+//*****Configuração do Banco de Dados MySQL********* 
+const db = require('./db'); // Importando o nosso módulo de conexão com o banco 
 
-const router = express.Router()
-//isso permite que a gente cria diferentes URLs e ENDPOINTs para que o frontend possa fazer chamadas
+const app = express(); 
+//O APP irá receber o express e todas suas dependencias
+ 
+//*****Configuração das rotas *********
+const routes = require('./routes'); // Chamando o módulo das rotas
 
-router.get("/", (req,res)=>{
-    res.sendFile(path.join(__dirname + '/pages/home.html'))
+//***** Incluir Novo *********
+app.use(express.json()); //Aqui transformamos os dados que chegam como binario em JSON
+
+app.use('/', routes); 
+//Após declarar nossas rotas, aqui falamos para nosso app usar elas como referencia
+
+app.listen(3333, () => { 
+    console.log('Servidor Rodando');
 })
+//Aqui definimos quem irá escutar nosso chamado e nos responder
 
-//aqui definimos nossa rota para o arquivo html usando o path para sempre retornar dinamicamente o vem antes da 
-//'pages/homedir.html'
-//tudo que se encontra depois da barra/ serão nossas rotas.
 
-app.use(router);
-//após declarar nossas rotas,aqui falamos para nosso app
-
-app.listen(3333, ()=>{
-    console.log('servidor rodando')
-})
-
-//aqui definimos quem ira escutar nosso chamado e nos responder
-
-app.get('/hello',(req, res)=>{
-    console.log('get funcionando');
-    res.send({ message: 'oi'});
-})
-// dentro do get ja definimos uma função anonia callback,que recebe uma requisição com o REQUEST e que retorna uma resposta com REPLY
-
-app.get('/usuario',(req,res)=>{
-    console.log('get funcionando');
-    res.send({usuario:'patricia'});
-})
